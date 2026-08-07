@@ -1,0 +1,27 @@
+##################################
+#  Clone the repository to the directory with your ESPHome YAML 
+#  On HAOS this will be /homeassistant/esphome/
+#  Create the directory structure of /components/pm1006k/
+#  Create the files and input the contents from this repository or copy the files from the repository into pm1066k/
+#  The below code is working on a Wemos D1 Mini
+##################################
+
+uart:
+  id: uart_pm1006
+  tx_pin: GPIO1  # TX0 / D1 
+  rx_pin: GPIO3  # RX0 / D3
+  baud_rate: 9600
+
+# Custom component registration
+external_components:
+  - source:
+      type: local
+      path: components
+
+sensor:
+  - platform: pm1006k
+    pm_2_5:
+      name: "Outdoor Air PM2.5"
+      id: outdoor_pm25
+      filters:
+        - throttle_average: 10s
