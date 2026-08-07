@@ -1,0 +1,30 @@
+################################
+# Simply place the components below, adjust your desired pins, and compile your code.
+# 
+# Note on Caching: ESPHome caches external Git components locally after the first build. 
+# If there are code updates to the repository later and need your build machine to pull the latest commit right away, 
+# temporarily add refresh: 0s under the source: block or clear out the .esphome/external_components directory before compiling.
+################################
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/nightshade00013/PM1006K
+      # Optional: set refresh to 0s while actively testing changes
+      # refresh: 0s
+    components: [ pm1006k ]
+
+uart:
+  id: uart_pm1006
+  # Modify to your chosen UART capable pins
+  tx_pin: GPIO1 
+  rx_pin: GPIO3 
+  baud_rate: 9600
+
+sensor:
+  - platform: pm1006k
+    pm_2_5:
+      name: "Outdoor Air PM2.5"
+      id: outdoor_pm25
+      filters:
+        - throttle_average: 10s
