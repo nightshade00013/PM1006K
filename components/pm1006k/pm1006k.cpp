@@ -34,10 +34,11 @@ void PM1006KComponent::loop() {
       uint8_t pm25_raw = buffer_[2];
       uint8_t checksum = buffer_[3];
 
-      // Validate 8-bit sum (0xA5 + status + pm25_val == checksum)
-      uint8_t calculated_cs = (uint8_t)(header + status + pm25_raw);
+      // Validate checksum using 7-bit mask (& 0x7F) to account for higher PM2.5 readings
+      uint8_t calculated_cs = (uint8_t)(header + status + pm25_raw) & 0x7F;
+      uint8_t expected_cs = checksum & 0x7F;
 
-      if (calculated_cs == checksum) {
+      if (calculated_cs == expected_cs) {
         float pm25_val = (float)pm25_raw;
         ESP_LOGD(TAG, "PM2.5: %.0f ug/m3", pm25_val);
 
